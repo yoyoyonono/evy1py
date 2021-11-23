@@ -13,3 +13,9 @@ def choose_midi_input_port():
         print(f'{i}: {port}')
     port_id = int(input('Choose port: '))
     return mido.open_input(ports[port_id])
+
+def phoneme_to_midi_message(phoneme: str):
+    char_list = list(phoneme.encode('utf-8'))
+    for x in range(len(char_list) - 1):
+        char_list.insert(x*2 + 1, 32)
+    return mido.Message('sysex', data=[0x43, 0x79, 0x09, 0x00, 0x50, 0x10] + char_list + [0x00])
