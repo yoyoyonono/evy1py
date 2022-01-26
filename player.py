@@ -1,15 +1,22 @@
-import mido
+from tqdm import tqdm
+from rich import print
 from util import *
+import mido
+import rich
+import rich.live
+import rich.table
 
-midfile = mido.MidiFile('Black_MIDI_Team_-_Bláçk_mïdï.mid')
 outport = choose_midi_output_port()
-#outport.send(mido.Message('control_change', control=7, value=127))
-for msg in midfile.play():
-#    print(msg)
-    if msg.type == 'note_on' or msg.type == 'note_off':
-#        msg.velocity = 127
-        if msg.channel == 8:
-            msg.channel = 10
-        elif msg.channel != 9:
-            msg.channel += 1
-    outport.send(msg)
+outport.reset()
+outport.send(mido.Message('control_change', control=7, value=127))
+midfile = mido.MidiFile(choose_midi_file_with_dragdrop())
+
+try:
+    for msg in tqdm(midfile.play()):
+#        if msg.type not in ('note_on', 'note_off', 'pitchwheel'):
+#             print(msg)
+#        print(msg)
+        outport.send(normal_to_evy1(msg))
+except KeyboardInterrupt:
+    outport.reset()
+    outport.close()
