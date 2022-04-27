@@ -13,10 +13,11 @@ midfile = mido.MidiFile(choose_midi_file_with_dragdrop())
 
 try:
     for msg in tqdm(midfile.play()):
-#        if msg.type not in ('note_on', 'note_off', 'pitchwheel'):
-#             print(msg)
-#        print(msg)
-        outport.send(normal_to_evy1(msg))
+        if msg.type not in ('note_on', 'note_off', 'pitchwheel'):
+             print(msg)
+        print(msg)
+#        outport.send(normal_to_evy1(msg))
+        outport.send(msg)
 except KeyboardInterrupt:
     outport.reset()
     outport.close()

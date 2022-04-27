@@ -44,6 +44,17 @@ def choose_midi_file_with_dragdrop() -> str:
     file_path = filedialog.askopenfilename(initialdir='.', title='Select MIDI file', filetypes=(('MIDI files', '*.mid'), ('all files', '*.*')))
     return file_path
 
+def choose_midi_output_file() -> str:
+    import tkinter as tk
+    from tkinter import filedialog
+    root = tk.Tk()
+    root.withdraw()
+    root.lift()
+    root.attributes('-topmost', True)
+    root.update()
+    file_path = filedialog.asksaveasfilename(initialdir='.', title='Select MIDI file', filetypes=(('MIDI files', '*.mid'), ('all files', '*.*')))
+    return file_path
+
 def safely_add_message(message: mido.Message, table: rich.table.Table):
     message_type = message.type
     message_channel = str(message.channel) if hasattr(message, 'channel') else 'N/A'
