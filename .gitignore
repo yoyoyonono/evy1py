@@ -1,6 +1,7 @@
 *.mid
 *.ino
 .vscode/
+*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
