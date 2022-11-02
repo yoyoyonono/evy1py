@@ -1,5 +1,6 @@
 import mido
 import rich.table
+import phonemes
 
 def choose_midi_output_port():
     ports = mido.get_output_names()
@@ -8,6 +9,11 @@ def choose_midi_output_port():
     port_id = int(input('Choose port: '))
     return mido.open_output(ports[port_id])
 
+def choose_midi_output_port_auto():
+    """chooses midi output port with eVY1 in name"""
+    ports = mido.get_output_names()
+    return mido.open_output([port for port in ports if 'eVY1' in port][0])
+
 def choose_midi_input_port():
     ports = mido.get_input_names()
     for i, port in enumerate(ports):
@@ -15,11 +21,24 @@ def choose_midi_input_port():
     port_id = int(input('Choose port: '))
     return mido.open_input(ports[port_id])
 
+def choose_midi_input_port_auto():
+    """chooses midi input port with DMK25 in name"""
+    ports = mido.get_input_names()
+    return mido.open_input([port for port in ports if 'DMK25' in port][0])
+
 def phoneme_to_midi_message(phoneme: str):
     char_list = list(phoneme.encode('utf-8'))
-    for x in range(len(char_list) - 1):
-        char_list.insert(x*2 + 1, 32)
     return mido.Message('sysex', data=[0x43, 0x79, 0x09, 0x00, 0x50, 0x10] + char_list + [0x00])
+
+def japanese_to_phoneme(japanese: str) -> str:
+    output = ''
+    for i in range(len(japanese)):
+        if japanese[i:i+2] in phonemes.phonemes:
+            output += phonemes.phonemes[japanese[i:i+2]] + ','
+        elif japanese[i] in phonemes.phonemes:
+            output += phonemes.phonemes[japanese[i]] + ','
+    print(output)
+    return output[:-1]
 
 def normal_to_evy1(message: mido.Message):
     message = message.copy()
