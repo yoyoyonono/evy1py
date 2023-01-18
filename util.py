@@ -31,14 +31,16 @@ def phoneme_to_midi_message(phoneme: str):
     return mido.Message('sysex', data=[0x43, 0x79, 0x09, 0x00, 0x50, 0x10] + char_list + [0x00])
 
 def japanese_to_phoneme(japanese: str) -> str:
-    output = ''
-    for i in range(len(japanese)):
-        if japanese[i:i+2] in phonemes.phonemes:
-            output += phonemes.phonemes[japanese[i:i+2]] + ','
-        elif japanese[i] in phonemes.phonemes:
-            output += phonemes.phonemes[japanese[i]] + ','
-    print(output)
-    return output[:-1]
+    if japanese != '':
+        output = ''
+        for i in range(len(japanese)):
+            if japanese[i:i+2] in phonemes.phonemes:
+                output += phonemes.phonemes[japanese[i:i+2]] + ','
+            elif japanese[i] in phonemes.phonemes:
+                output += phonemes.phonemes[japanese[i]] + ','
+        return output[:-1]
+    else:
+        return ''
 
 def normal_to_evy1(message: mido.Message):
     message = message.copy()
